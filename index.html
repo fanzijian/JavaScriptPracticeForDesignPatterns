@@ -57,40 +57,68 @@
 <div class="right"></div>
 <div id="demo"></div>
 <script type="text/javascript">
-
-function mix () {
-	var i = 1,
-		len = arguments.length,
-		target = arguments[0],
-		arg;
-	for (; i < len; i++) {
-		arg = arguments[i];
-		for (var property in arg) {
-			if(arg[property] instanceof Number || arg[property] instanceof String ||arg[property] instanceof Boolean){
-				target[property] = arg[property];
-			}else if( arg[property] instanceof Function){
-				var obj = [];
-				mix(obj, arg[property]);
-				target[property] = obj;
-			}
+function deepClone(obj){
+	var result;
+	if(typeof obj === 'object'){
+		if(Object.prototype.toString.call(obj) == '[object Array]'){
+			result = [];
+		}else{
+			result = {};
 		}
-	};
-	return target;
+	}
+	for( var property in obj){
+		var arg = obj[property];
+		result[property] = typeof arg === 'object'? arguments.callee(arg) : arg;
+	}
+	return result;
 }
-var book = {
-	name : 'javascript',
-	alike : ['html', 'css', 'program'],
-	time : {a: 'aa', b: ['html', 'css', 'program']}
-}
-var anotherBook = {
-	color : 'blue'
-}
-mix(anotherBook, book);
-anotherBook.alike.push('Design Pattern');
-anotherBook.time.b.push('1');
+var oPerson={
+    oName:"rookiebob",
+    oAge:"18",
+    oAddress:{
+        province:"beijing"
+    },    
+    ofavorite:[
+        "swimming",
+        {reading:"history book"}
+    ],
+    skill:function(){
+        console.log("bob is coding");
+    }
+};
+var oNew=deepClone(oPerson);
+console.log(oPerson.oAddress.province);//beijing
+oNew.oAddress.province="shanghai";
+console.log(oPerson.oAddress.province);//beijing
+// function mix () {
+// 	var i = 1,
+// 		len = arguments.length,
+// 		target = arguments[0],
+// 		arg;
+// 	for (; i < len; i++) {
+// 		arg = arguments[i];
+// 		for (var property in arg) {
+// 			target[property] = typeof arg[property] === 'object'? arguments.callee(arg[property]):arg[property];
+// 			//target[property] = arg[property];
+// 		}
+// 	};
+// 	return target;
+// }
+// var book = {
+// 	name : 'javascript',
+// 	alike : ['html', 'css', 'program'],
+// 	//time : {a: 'aa', b: ['html', 'css', 'program']}
+// }
+// var anotherBook = {
+// 	color : 'blue'
+// }
+// mix(anotherBook, book);
+// console.log(anotherBook);
+// anotherBook.alike.push('Design Pattern');
+// //anotherBook.time.b.push('1');
 
-console.log(anotherBook);
-console.log(book);
+// console.log(anotherBook);
+// console.log(book);
 </script>
 </body>
 </html>
